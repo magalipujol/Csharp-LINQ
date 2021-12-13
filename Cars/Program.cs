@@ -13,11 +13,29 @@ namespace Cars
 
             // if I have multiple ways of ordering, it's incorrect to use two orderBy
             // this is how I would do it if I used the extension method syntax
-            // var query = cars.OrderByDescending(c => c.Combined).ThenBy(c => c.Name);
+            // the select is not necessary
+            // var query = cars.Where(c => c.Manufacturer == "BMW" && c.Year == 2016).OrderByDescending(c => c.Combined).ThenBy(c => c.Name).Select(c => c);
             var query =
                 from car in cars
+                where car.Manufacturer == "BMW" && car.Year == 2016
                 orderby car.Combined descending, car.Name ascending
                 select car;
+
+            // if I want to show only the top car in the query I would use this
+            // this returns only a Car, not an iterable of Cars
+            // not the most efficient query because orders after selecting the ones that I care about
+            var top = cars.OrderByDescending(c => c.Combined)
+                          .ThenBy(c => c.Name)
+                          .Select(c => c)
+                          .FirstOrDefault(c => c.Manufacturer == "aaa" && c.Year == 2016);
+            if (top != null)
+            {
+                Console.WriteLine(top.Name);
+            }
+
+            // if I need to know if there is data with an specific condition I can use any, all or contains
+            var BMWboolAll = cars.All(c => c.Manufacturer == "BMW"); // false
+            var BMWboolAny = cars.Any(c => c.Manufacturer == "BMW"); // true
 
             foreach (var car in query.Take(10))
             {
