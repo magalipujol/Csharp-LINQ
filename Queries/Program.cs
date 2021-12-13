@@ -10,6 +10,7 @@ namespace Queries
     {
         static void Main(string[] args)
         {
+            Console.WriteLine("hola");
             var movies = new List<Movie>
             {
                 new Movie { Title = "Blancanieves y los 7 gu",
