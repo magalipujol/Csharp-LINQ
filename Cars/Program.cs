@@ -14,6 +14,25 @@ namespace Cars
 
             var manufacturers = ProcessManufacturers("manufacturers.csv");
 
+            // TODO esta query no anda :(
+            var query3 =
+                from car in cars
+                join manufacturer in manufacturers
+                    on car.Manufacturer equals manufacturer.Name
+                orderby car.Combined descending, car.Name ascending
+                select new
+                {
+                    manufacturer.Headquarters,
+                    car.Name,
+                    car.Combined
+                };
+
+            foreach (var info in query3.Take(10))
+            {
+                Console.WriteLine($"{ info.Name } : { info.Name} : { info.Headquarters }");
+            }
+
+
             // if I have multiple ways of ordering, it's incorrect to use two orderBy
             // this is how I would do it if I used the extension method syntax
             // the select is not necessary
