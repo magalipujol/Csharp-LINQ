@@ -10,7 +10,9 @@ namespace Cars
         static void Main(string[] args)
         {
             var cars = ProcessFile("fuel.csv");
-            var cars1 = ProcessFileCustom("fuel.csv");
+            var cars1 = ProcessFileCustom("fuel.csv"); 
+
+            var manufacturers = ProcessManufacturers("manufacturers.csv");
 
             // if I have multiple ways of ordering, it's incorrect to use two orderBy
             // this is how I would do it if I used the extension method syntax
@@ -43,6 +45,24 @@ namespace Cars
                 Console.WriteLine($"{ car.Name } : { car.Combined }");
             }
 
+        }
+
+        private static List<Manufacturer> ProcessManufacturers(string path)
+        {
+            var query =
+                File.ReadAllLines(path)
+                    .Where(l => l.Length > 1)
+                    .Select(l =>
+                    {
+                        var columns = l.Split(',');
+                        return new Manufacturer
+                        {
+                            Name = columns[0],
+                            Headquarters = columns[1],
+                            Year = int.Parse(columns[20])
+                        };
+                    });
+            return query.ToList();
         }
 
         // this is a file processor
@@ -78,7 +98,7 @@ namespace Cars
 
     public static class CarExtensions
     {
-        // TODO check this error, it compiles but why
+        // TODO check this error tell me whyyyyyyyyyyyyy
         public static IEnumerable<Car> ToCar(this IEnumerable<string> source)
         {
             foreach (var line in source)
